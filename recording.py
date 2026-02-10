@@ -1,6 +1,6 @@
 from pyfastscreencap import pyfastscreencap as screencap
 from time import sleep
-from utils import find_location_on_screen
+from utils import find_location_on_screen, click_on_screen, move_mouse_to
 import math
 import pyautogui
 
@@ -12,10 +12,10 @@ locations = {
 }
 
 def toggle_pause():
-    pyautogui.click(*locations["pause_button"])
+    click_on_screen(*locations["pause_button"])
 
 def speed_up_game():
-    pyautogui.click(*locations["speed_button"])
+    click_on_screen(*locations["speed_button"])
 
 # returns replay length in seconds
 def record_replay(filepath, speed_factor=1):
@@ -29,9 +29,10 @@ def record_replay(filepath, speed_factor=1):
     toggle_pause()
 
     #zoom out
-    pyautogui.moveTo(1000, 1000)
+    move_mouse_to(1000, 1000)
     for _ in range(10):
         pyautogui.scroll(-500)
+        sleep(0.1)
 
     #unpause to begin recording
     toggle_pause()
