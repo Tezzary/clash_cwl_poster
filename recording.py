@@ -60,5 +60,4 @@ def record_replay(filepath, speed_factor=1):
     return 
 
 if __name__ == "__main__":
-    pyautogui.PAUSE = 0.5
     record_replay("replay.mp4", 2)

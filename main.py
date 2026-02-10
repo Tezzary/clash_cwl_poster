@@ -3,9 +3,6 @@ from utils import *
 from time import sleep
 from recording import record_replay
 
-#set a 0.5 second delay after every pyautogui call to allow ui updates and prevent misclicks
-pyautogui.PAUSE = 0.5
-
 init_clash_window()
 
 locations = {
@@ -69,7 +66,7 @@ def start_replay(day: int, replay: int) -> bool:
 
     # go to the right replay
     for i in range(replay - 1):
-        click_on_screen(*locations["next_base"], min_delay=0.01, max_delay=0.05, max_press_time=.15)
+        click_on_screen(*locations["next_base"], min_delay=0.1, max_delay=0.3, max_press_time=.15)
 
     # check if its a 3 star
     if not check_color_of_pixel(*locations["3rd_star"]):
