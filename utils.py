@@ -67,6 +67,11 @@ def click_on_screen(x, y, max_offset=5, min_delay=0.2, max_delay=2.0, min_press_
     sleep(random.uniform(min_press_time, max_press_time))
     pyautogui.mouseUp()
 
+def scroll(scrolls: int):
+    for _ in range(abs(scrolls)):
+        pyautogui.scroll(500 if scrolls > 0 else -500)
+        sleep(0.01)
+
 def normalize_camera():
     win_x, win_y = get_window_pos()
     center_x = win_x + RES_X // 2
@@ -75,9 +80,7 @@ def normalize_camera():
     pyautogui.moveTo(center_x, center_y)
     sleep(0.1)
 
-    for _ in range(20):
-        pyautogui.scroll(-500)
-        sleep(0.1)
+    scroll(-15)
 
     pyautogui.mouseDown()
     sleep(0.1)
