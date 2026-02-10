@@ -81,6 +81,7 @@ def start_replay(day: int, replay: int) -> bool:
 def reset():
     # exit out of the replay
     click_on_screen(*locations["return_home"])
+    sleep(2)
 
     # close the popup
     click_on_screen(*locations["close_popup"])
