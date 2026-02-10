@@ -48,15 +48,14 @@ def start_replay(day: int, replay: int) -> bool:
     
     # open cwl page
     click_on_screen(*locations["cwl_menu"])
-    # sleep(5) # sleep extra long in case it needs to load
+    sleep(5) # sleep extra long in case it needs to load
     
     # try to close the popup
     click_on_screen(*locations["close_popup"])
 
     # scroll to the top of the page
     move_mouse_to(*locations["center_of_screen"])
-    for i in range(15):
-        pyautogui.scroll(500)
+    scroll(15)
 
     # go the the right day
     click_on_screen(*days[day])
