@@ -48,7 +48,7 @@ def init_clash_window():
         window.resizeTo(2560, 1440)
         sleep(0.1)
 
-def click_on_screen(x, y, max_offset=5, min_press_time=0.05, max_press_time=0.25, max_delay=5):
+def move_mouse_to(x, y, max_offset=5):
     win_x, win_y = get_window_pos()
     x += win_x
     y += win_y
@@ -58,12 +58,14 @@ def click_on_screen(x, y, max_offset=5, min_press_time=0.05, max_press_time=0.25
 
     pyautogui.moveTo(x + offset_x, y + offset_y)
 
-    sleep(random.uniform(0, max_delay))
+def click_on_screen(x, y, max_offset=5, min_delay=0.2, max_delay=2.0, min_press_time=0.05, max_press_time=0.25):
+    move_mouse_to(x, y, max_offset)
+
+    sleep(random.uniform(min_delay, max_delay))
 
     pyautogui.mouseDown()
     sleep(random.uniform(min_press_time, max_press_time))
     pyautogui.mouseUp()
-
 
 def normalize_camera():
     win_x, win_y = get_window_pos()
