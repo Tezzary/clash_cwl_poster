@@ -100,7 +100,6 @@ def find_location_on_screen(image_path, threshold=0.5):
 
 if __name__ == "__main__":
     init_clash_window()
-
     #normalize_camera()
 
     screenshot = get_screenshot()
