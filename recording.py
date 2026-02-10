@@ -12,10 +12,10 @@ locations = {
 }
 
 def toggle_pause():
-    click_on_screen(*locations["pause_button"])
+    click_on_screen(*locations["pause_button"], max_delay=.3)
 
 def speed_up_game():
-    click_on_screen(*locations["speed_button"])
+    click_on_screen(*locations["speed_button"], max_delay=.3)
 
 # returns replay length in seconds
 def record_replay(filepath, speed_factor=1):

@@ -8,6 +8,7 @@ init_clash_window()
 locations = {
     "cwl_menu": (80, 975),
     "center_of_screen": (1283, 565),
+    "return_home": (135,1302),
 
     "close_popup": (2256, 40),
     "first_enemy_base": (1488, 910),
@@ -64,7 +65,7 @@ def start_replay(day: int, replay: int) -> bool:
     # click on the first enemy base
     click_on_screen(*locations["first_enemy_base"])
 
-    # go to the right replay
+    # go to the correct replay
     for i in range(replay - 1):
         click_on_screen(*locations["next_base"], min_delay=0.1, max_delay=0.3, max_press_time=.15)
 
@@ -77,6 +78,17 @@ def start_replay(day: int, replay: int) -> bool:
 
     return True
 
+def reset():
+    # exit out of the replay
+    click_on_screen(*locations["return_home"])
+
+    # close the popup
+    click_on_screen(*locations["close_popup"])
+
+    # return home
+    click_on_screen(*locations["return_home"])
+
 if __name__ == "__main__":
     start_replay(4, 11)
-    record_replay("replay.mp4", speed_factor=2)
+    record_replay("replay.mp4", speed_factor=4)
+    reset()
