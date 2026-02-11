@@ -3,3 +3,5 @@ pillow
 pyautogui
 pygetwindow
 obsws-python
+moviepy
+imageio-ffmpeg
