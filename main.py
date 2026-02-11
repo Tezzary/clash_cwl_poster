@@ -65,7 +65,8 @@ def start_replay(day: int, replay: int) -> bool:
         click_on_screen(*locations["next_base"], min_delay=0.1, max_delay=0.3, max_press_time=.15)
 
     # check if its a 3 star
-    if not check_color_of_pixel(*locations["3rd_star"]):
+    if not check_color_of_pixel(*locations["3rd_star"], threshold=40):
+        print("exiting because star col is wrong")
         return False
 
     # start the replay
@@ -73,7 +74,7 @@ def start_replay(day: int, replay: int) -> bool:
 
     return True
 
-def reset():
+def reset_after_rec():
     # exit out of the replay
     click_on_screen(*locations["return_home"])
     sleep(2)
@@ -82,6 +83,9 @@ def reset():
     click_on_screen(*locations["close_popup"])
 
     # return home
+    click_on_screen(*locations["return_home"])
+
+def reset_no_rec():
     click_on_screen(*locations["return_home"])
 
 def check_if_recording_exists(subdirs, filename):
@@ -119,5 +123,6 @@ if __name__ == "__main__":
 
             if start_recording:
                 record_replay(file_path, file_name, speed_factor=4)
-            
-            reset()
+                reset_after_rec()
+            else:
+                reset_no_rec()
