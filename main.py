@@ -74,18 +74,19 @@ def start_replay(day: int, replay: int) -> bool:
 
     return True
 
-def reset_after_rec():
+def reset(watched_replay: bool):
     # exit out of the replay
     click_on_screen(*locations["return_home"])
+
+    if watched_replay:
+        return
+
     sleep(2)
 
     # close the popup
     click_on_screen(*locations["close_popup"])
 
     # return home
-    click_on_screen(*locations["return_home"])
-
-def reset_no_rec():
     click_on_screen(*locations["return_home"])
 
 def check_if_recording_exists(subdirs, filename):
@@ -123,6 +124,5 @@ if __name__ == "__main__":
 
             if start_recording:
                 record_replay(file_path, file_name, speed_factor=4)
-                reset_after_rec()
-            else:
-                reset_no_rec()
+
+            reset(start_recording)
