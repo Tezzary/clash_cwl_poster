@@ -7,8 +7,8 @@ import pyautogui
 FRAME_RATE = 60
 
 locations = {
-    "speed_button": (2460, 1340),
-    "pause_button": (2325, 1340)
+    "speed_button": (2450, 1300),
+    "pause_button": (2280, 1300)
 }
 
 def toggle_pause():
