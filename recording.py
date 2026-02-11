@@ -4,6 +4,7 @@ from utils import find_location_on_screen, click_on_screen, init_clash_window, m
 import math
 import time
 import pyautogui
+import os
 import obsws_python as obs
 
 FRAME_RATE = 60
@@ -14,10 +15,22 @@ PASSWORD = 'password' # Replace with your actual password
 
 recording_start = None
 
-def start_recording():
+def start_recording(subdirs, filename):
     global recording_start
 
     cl = obs.ReqClient(host=HOST, port=PORT, password=PASSWORD, timeout=3)
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    videos_dir = os.path.join(base_dir, "videos")
+    for subdir in subdirs:
+        videos_dir = os.path.join(videos_dir, subdir)
+
+    os.makedirs(videos_dir, exist_ok=True)
+
+    cl.set_record_directory(videos_dir)
+    #cl.set_record_filename_format(filename)
+
     resp = cl.start_record()
     recording_start = time.time()
     
@@ -48,7 +61,7 @@ def zoom_out():
     pyautogui.keyUp('ctrl')
 
 # returns replay length in seconds
-def record_replay(filepath, speed_factor=1):
+def record_replay(subdirs, filename, speed_factor=1):
     if not speed_factor in (1, 2, 4):
         raise ValueError("Speed factor must be 1 of: 1, 2, 4")
     
@@ -70,7 +83,7 @@ def record_replay(filepath, speed_factor=1):
     toggle_pause()
 
     #recording
-    start_recording()
+    start_recording(subdirs, filename)
     
     #check if play again button is on screen to end replay
     while not find_location_on_screen("resources/play_again.png", 0.99):

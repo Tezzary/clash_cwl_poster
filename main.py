@@ -86,5 +86,5 @@ def reset():
 if __name__ == "__main__":
     init_clash_window()
     start_replay(4, 11)
-    record_replay("replay.mp4", speed_factor=4)
+    record_replay(["lethal_turtles", "2026-02", "day_4"], "replay_11", speed_factor=4)
     reset()
