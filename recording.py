@@ -26,8 +26,7 @@ def start_recording(subdirs, filename):
     for subdir in subdirs:
         videos_dir = os.path.join(videos_dir, subdir)
 
-    # if the dir already exists then an error should be raised so we dont accidentily record over existing files
-    os.makedirs(videos_dir, exist_ok=False)
+    os.makedirs(videos_dir, exist_ok=True)
 
     cl.set_record_directory(videos_dir)
     cl.set_profile_parameter("Output", "FilenameFormatting", filename)
