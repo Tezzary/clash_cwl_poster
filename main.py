@@ -96,6 +96,9 @@ if __name__ == "__main__":
 
             print(f"recording {"".join([f"{x}/" for x in file_path])}{file_name}")
 
-            start_replay(day, attack)
-            record_replay(file_path, file_name, speed_factor=4)
+            start_recording = start_replay(day, attack)
+
+            if start_recording:
+                record_replay(file_path, file_name, speed_factor=4)
+            
             reset()
