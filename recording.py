@@ -26,10 +26,11 @@ def start_recording(subdirs, filename):
     for subdir in subdirs:
         videos_dir = os.path.join(videos_dir, subdir)
 
-    os.makedirs(videos_dir, exist_ok=True)
+    # if the dir already exists then an error should be raised so we dont accidentily record over existing files
+    os.makedirs(videos_dir, exist_ok=False)
 
     cl.set_record_directory(videos_dir)
-    #cl.set_record_filename_format(filename)
+    cl.set_profile_parameter("Output", "FilenameFormatting", filename)
 
     resp = cl.start_record()
     recording_start = time.time()
@@ -97,6 +98,4 @@ def record_replay(subdirs, filename, speed_factor=1):
     return replay_time
 
 if __name__ == "__main__":
-    init_clash_window()
-    zoom_out()
-    #record_replay("replay.mp4", 2)
+    pass

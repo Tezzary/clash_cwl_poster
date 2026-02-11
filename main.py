@@ -91,7 +91,6 @@ if __name__ == "__main__":
 
     for day in range(1, 8):
         for attack in range (1, 16):
-
             file_path = [CLAN_NAME, DATE, f"day_{day}"]
             file_name = f"attack_{attack}"
 
