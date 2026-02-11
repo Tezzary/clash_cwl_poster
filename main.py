@@ -3,30 +3,25 @@ from utils import *
 from time import sleep
 from recording import record_replay
 
-init_clash_window()
-
 locations = {
-    "cwl_menu": (80, 975),
-    "center_of_screen": (1283, 565),
-    "return_home": (135,1302),
-
-    "close_popup": (2256, 40),
-    "first_enemy_base": (1488, 910),
-    "replay_button": (984, 1293),
-    "next_base": (1789, 1191),
-    "3rd_star": (1063, 1225, 255,221,77)
+    "cwl_menu": (105, 877),
+    "close_popup": (2270, 82),
+    "center_of_screen": (1282, 651),
+    "return_home": (155, 1282),
+    "first_enemy_base": (1486, 899),
+    "replay_button": (931, 1265),
+    "next_base": (1896, 1142),
+    "3rd_star": (1018, 1182, 255, 221, 77)
 }
 
-three_star_color = (255,221,77)
-
 days = {
-    1:  (772,1324),
-    2:  (941,1324),
-    3:  (1112,1324),
-    4:  (1287,1324),
-    5:  (1456,1324),
-    6:  (1626,1324),
-    7:  (1795,1324)
+    1: (670,1301),
+    2: (877,1294),
+    3: (1083,1296),
+    4: (1293,1296),
+    5: (1495,1292),
+    6: (1694,1294),
+    7: (1908,1293),
 }
 
 def start_replay(day: int, replay: int) -> bool:
@@ -89,6 +84,7 @@ def reset():
     click_on_screen(*locations["return_home"])
 
 if __name__ == "__main__":
+    init_clash_window()
     start_replay(4, 11)
     record_replay("replay.mp4", speed_factor=4)
     reset()
