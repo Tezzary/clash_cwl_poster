@@ -107,10 +107,16 @@ def find_location_on_screen(image_path, threshold=0.5):
         return center_x, center_y
     return None
 
-def check_color_of_pixel(x: int, y: int, r: int, g: int, b: int, threshold: int = 2) -> bool:
+def check_color_of_pixel(x: int, y: int, r: int, g: int, b: int, threshold: int = 10) -> bool:
     screenshot = get_screenshot(x, y, x + 1, y + 1)
     pixel_color = screenshot.getpixel((0, 0))
-    return all(abs(pc - c) <= threshold for pc, c in zip(pixel_color, (r, g, b)))
+
+    matches = all(abs(pc - c) <= threshold for pc, c in zip(pixel_color, (r, g, b)))
+
+    if not matches:
+        print(f"Pixel color {pixel_color} does not match expected color {(r, g, b)} within threshold {threshold}")
+    
+    return matches
 
 if __name__ == "__main__":
     init_clash_window()

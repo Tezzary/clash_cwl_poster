@@ -65,7 +65,8 @@ def start_replay(day: int, replay: int) -> bool:
         click_on_screen(*locations["next_base"], min_delay=0.1, max_delay=0.3, max_press_time=.15)
 
     # check if its a 3 star
-    if not check_color_of_pixel(*locations["3rd_star"]):
+    if not check_color_of_pixel(*locations["3rd_star"], threshold=40):
+        print("exiting because star col is wrong")
         return False
 
     # start the replay
