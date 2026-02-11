@@ -2,3 +2,4 @@ pyfastscreencap
 pillow
 pyautogui
 pygetwindow
+obsws-python

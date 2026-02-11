@@ -1,10 +1,31 @@
 from pyfastscreencap import pyfastscreencap as screencap
 from time import sleep
-from utils import find_location_on_screen, click_on_screen, move_mouse_to
+from utils import find_location_on_screen, click_on_screen, init_clash_window, move_mouse_to
 import math
+import time
 import pyautogui
+import obsws_python as obs
 
 FRAME_RATE = 60
+
+HOST = 'localhost'
+PORT = 4455
+PASSWORD = 'password' # Replace with your actual password
+
+recording_start = None
+
+def start_recording():
+    global recording_start
+
+    cl = obs.ReqClient(host=HOST, port=PORT, password=PASSWORD, timeout=3)
+    resp = cl.start_record()
+    recording_start = time.time()
+    
+
+def stop_recording():
+    cl = obs.ReqClient(host=HOST, port=PORT, password=PASSWORD, timeout=3)
+    resp = cl.stop_record()
+    return time.time() - recording_start
 
 locations = {
     "speed_button": (2450, 1300),
@@ -17,6 +38,15 @@ def toggle_pause():
 def speed_up_game():
     click_on_screen(*locations["speed_button"], max_delay=.3)
 
+def zoom_out():
+    move_mouse_to(1280, 720)
+    pyautogui.keyDown('ctrl')
+    sleep(0.1)
+    for _ in range(10):
+        pyautogui.scroll(-500)
+        sleep(0.3)
+    pyautogui.keyUp('ctrl')
+
 # returns replay length in seconds
 def record_replay(filepath, speed_factor=1):
     if not speed_factor in (1, 2, 4):
@@ -25,40 +55,35 @@ def record_replay(filepath, speed_factor=1):
     while not find_location_on_screen("resources/pause_button.png", 0.99):
         sleep(0.1)
     
-    #initially pause while doing setup
-    toggle_pause()
-
-    #zoom out
-    move_mouse_to(1000, 1000)
-    for _ in range(10):
-        pyautogui.scroll(-500)
-        sleep(0.1)
-
-    #unpause to begin recording
-    toggle_pause()
-
     #handling game speed
     speed_button_clicks = round(math.log2(speed_factor))
     for _ in range(speed_button_clicks):
         speed_up_game()
 
-    #recording
-    recorder = screencap.Recorder(filepath, 0, FRAME_RATE, 100, True)
+    #initially pause while doing setup
+    toggle_pause()
 
-    recorder.start_recording()
+    #zoom out
+    zoom_out()
+
+    #unpause to begin recording
+    toggle_pause()
+
+    #recording
+    start_recording()
     
     #check if play again button is on screen to end replay
     while not find_location_on_screen("resources/play_again.png", 0.99):
         sleep(1)
 
-    frame_count = recorder.stop_recording()
+    recording_time = stop_recording()
+    replay_time = recording_time * speed_factor
 
-    replay_time = frame_count / FRAME_RATE * speed_factor
+    print(f"Recorded {replay_time} second replay in {recording_time} seconds at speed factor {speed_factor}x")
 
-    print(f"Recorded {frame_count} frames")
-    print(f"Recorded {replay_time} second replay")
-
-    return 
+    return replay_time
 
 if __name__ == "__main__":
-    record_replay("replay.mp4", 2)
+    init_clash_window()
+    zoom_out()
+    #record_replay("replay.mp4", 2)
