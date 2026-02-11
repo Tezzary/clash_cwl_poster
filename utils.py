@@ -21,11 +21,9 @@ def get_window_pos(title=WINDOW_NAME) -> tuple[int, int]:
     raise Exception("No window found with title: " + title)
 
 def get_screenshot(start_x=0, start_y=0, end_x=RES_X, end_y=RES_Y):
-    x, y = get_window_pos()
-
     sleep(0.1)
 
-    screenshot = pyautogui.screenshot(region=[x + start_x, y + start_y, end_x - start_x, end_y - start_y])
+    screenshot = pyautogui.screenshot(region=[start_x, start_y, end_x - start_x, end_y - start_y])
     return screenshot
 
 def init_clash_window():
@@ -53,10 +51,6 @@ def init_clash_window():
         sleep(0.1)
 
 def move_mouse_to(x, y, max_offset=5):
-    win_x, win_y = get_window_pos()
-    x += win_x
-    y += win_y
-
     offset_x = random.randint(-max_offset, max_offset)
     offset_y = random.randint(-max_offset, max_offset)
 
@@ -77,9 +71,8 @@ def scroll(scrolls: int):
         sleep(0.01)
 
 def normalize_camera():
-    win_x, win_y = get_window_pos()
-    center_x = win_x + RES_X // 2
-    center_y = win_y + RES_Y // 2
+    center_x = RES_X // 2
+    center_y = RES_Y // 2
 
     pyautogui.moveTo(center_x, center_y)
     sleep(0.1)
