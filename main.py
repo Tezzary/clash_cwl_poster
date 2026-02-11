@@ -85,6 +85,18 @@ def reset():
 
 if __name__ == "__main__":
     init_clash_window()
-    start_replay(4, 11)
-    record_replay(["lethal_turtles", "2026-02", "day_4"], "replay_11", speed_factor=4)
-    reset()
+
+    CLAN_NAME = "Lethal_Turtles"
+    DATE = "26_FEB"
+
+    for day in range(1, 8):
+        for attack in range (1, 16):
+
+            file_path = [CLAN_NAME, DATE, f"day_{day}"]
+            file_name = f"attack_{attack}"
+
+            print(f"recording {"".join([f"{x}/" for x in file_path])}{file_name}")
+
+            start_replay(day, attack)
+            record_replay(file_path, file_name, speed_factor=4)
+            reset()
