@@ -2,6 +2,7 @@ import pyautogui
 from utils import *
 from time import sleep
 from recording import record_replay
+import os
 
 locations = {
     "cwl_menu": (105, 877),
@@ -83,6 +84,21 @@ def reset():
     # return home
     click_on_screen(*locations["return_home"])
 
+def check_if_recording_exists(subdirs, filename):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
+    videos_dir = os.path.join(base_dir, "videos")
+    for subdir in subdirs:
+        videos_dir = os.path.join(videos_dir, subdir)
+    
+    video_file = os.path.join(videos_dir, f"{filename}.mp4")
+
+    if os.path.exists(video_file):
+        return True
+    
+    print(f"file `{video_file}` does not exist")
+    return False
+
 if __name__ == "__main__":
     init_clash_window()
 
@@ -95,6 +111,9 @@ if __name__ == "__main__":
             file_name = f"attack_{attack}"
 
             print(f"recording {"".join([f"{x}/" for x in file_path])}{file_name}")
+
+            if check_if_recording_exists(file_path, file_name):
+                continue
 
             start_recording = start_replay(day, attack)
 
