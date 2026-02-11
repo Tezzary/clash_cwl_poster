@@ -7,7 +7,10 @@ import numpy as np
 
 RES_X = 2560
 RES_Y = 1440
-def get_window_pos(title="Clash of Clans") -> tuple[int, int]:
+
+WINDOW_NAME = "Android Device"
+
+def get_window_pos(title=WINDOW_NAME) -> tuple[int, int]:
     #get window handle
     window = gw.getWindowsWithTitle(title)[0]
     #set window to foreground
@@ -29,17 +32,18 @@ def init_clash_window():
     try:
         get_window_pos()
     except Exception:
+        raise Exception("PLEASE OPEN THE EMULATOR MANUALLY FOR THE MOMENT")
         pyautogui.press('win')
         sleep(0.2)
         pyautogui.write('Clash of Clans')
         sleep(0.2)
         pyautogui.press('enter')
         sleep(60)  # Wait for the game to open
-        print("opened Clash of Clans")
-    windows = gw.getWindowsWithTitle("Clash of Clans")
+        print(f"opened {WINDOW_NAME}")
+    windows = gw.getWindowsWithTitle(WINDOW_NAME)
 
     if not windows:
-        raise Exception("Clash of Clans window did not open in init_clash_window")
+        raise Exception(f"{WINDOW_NAME} window did not open in init_clash_window")
     
     window = windows[0]
 
