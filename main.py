@@ -7,6 +7,8 @@ from locations import locations
 if __name__ == "__main__":
     init_clash_window()
 
+    pyautogui.PAUSE = 0.0
+
     CLAN_NAME = "Lethal_Turtles"
     DATE = "26_FEB"
 
