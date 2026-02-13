@@ -1,95 +1,66 @@
 from utils import *
 from time import sleep
+from locations import locations
 from recording import record_replay
 import os
-from locations import *
 
-'''
-day = cwl day the replay is on
-replay = the number of the enemy base to rec
-on_cwl_page = if we just finished recording another replay (makes navigating faster)
-'''
-def start_replay(day: int, replay: int, on_cwl_page: bool = False) -> bool:
-    '''
-    click on cwl menu
-    scroll up
-    close popup
-    select right day
-    click top replay
-    click right arrow till we get to the replay
-    check if its 3 stars, exit if its not
-    press replay
-    '''
-    if day > 7 or day < 1:
-        raise ValueError("day is out of range")
-    
-    if replay < 1:
-        raise ValueError("replay is one indexed, and the value given is less than 1")
-    
-    if on_cwl_page:
-        # wait till we can see the info in the top corner
-        while not find_location_on_screen("resources/cwl_info.png"):
-            continue
+days = {
+    1: (670,1301),
+    2: (877,1294),
+    3: (1083,1296),
+    4: (1293,1296),
+    5: (1495,1292),
+    6: (1694,1294),
+    7: (1908,1293),
+}
 
-        if find_location_on_screen("resources/red_x.png"):
-            click_on_screen(*locations["close_popup"])
-        
-        click_on_screen(*locations["next_base"])
+def wait_for_cwl_menu_to_load():
+    sleep(0.5) # make sure the clouds have actually came
 
-        # check if its a 3 star
-        if not check_color_of_pixel(*locations["3rd_star"], threshold=40):
-            print("exiting because star col is wrong")
-            return False
+    while not find_location_on_screen(r"resources\cwl_info.png"): pass
 
-        click_on_screen(*locations["replay_button"])
-
-        return True
-
-    # open cwl page
-    click_on_screen(*locations["cwl_menu"])
-
-    # wait till we can see the info in the top corner
-    while not find_location_on_screen("resources/cwl_info.png"):
-        continue
-    
-    # close the popup
-    sleep(0.5) # leave time for popup animation to play
-    if find_location_on_screen("resources/red_x.png"):
-        click_on_screen(*locations["close_popup"])
-
-    # scroll to the top of the page (we know were at the top when the top is black)
+def scroll_to_top():
     move_mouse_to(*locations["center_of_screen"])
-    while not check_color_of_pixel(x=0, y=0, r=0, g=0, b=0, threshold=3):
+    while not check_color_of_pixel(0, 0, 0, 0, 0, 3):
         scroll(1)
 
-    # go the the right day
-    click_on_screen(*days[day])
-        
-    # wait till we can see the info in the top corner
-    sleep(0.5) # leave time for the clouds to come
-    while not find_location_on_screen("resources/cwl_info.png"):
-        continue
+def record_all_replays(clan_name: str, date: str, speed_factor: int):
+    '''
+    open cwl menu
 
-    # click on the first enemy base
-    click_on_screen(*locations["first_enemy_base"])
+    for day in 1 to 7
+        click on day
 
-    # go to the correct replay
-    for i in range(replay - 1):
-        click_on_screen(*locations["next_base"], min_delay=0.1, max_delay=0.3, max_press_time=.15)
+        for attack in 1 to 15
+            if file does not exist
+                record attack
+            go to next attack
+    '''
+    click_on_screen(*locations["cwl_menu"])
+    wait_for_cwl_menu_to_load()
+    click_on_screen(*locations["close_popup"])
 
-    # check if its a 3 star
-    if not check_color_of_pixel(*locations["3rd_star"], threshold=40):
-        print("exiting because star col is wrong")
-        return False
+    for day in range(1, 8):
+        click_on_screen(*locations["center_of_screen"])
+        click_on_screen(*days[day])
+        wait_for_cwl_menu_to_load()
+        scroll_to_top()
+        click_on_screen(*locations["first_enemy_base"])
 
-    # start the replay
-    click_on_screen(*locations["replay_button"])
+        for attack in range(1, 16):
+            filepath = [clan_name, date, f"day_{day}"]
+            filename = f"attack_{attack}"
 
-    return True
+            if not check_if_recording_exists(filepath, filename):
+                click_on_screen(*locations["replay_button"], min_delay=0.05, max_delay=0.1, min_press_time=0.05, max_press_time=0.1)
+                
+                record_replay(filepath, filename, speed_factor)
 
-def reset():
-    # exit out of the replay
-    click_on_screen(*locations["return_home"])
+                click_on_screen(*locations["return_home"])
+                wait_for_cwl_menu_to_load()
+                click_on_screen(*locations["close_popup"])
+            
+            click_on_screen(*locations["next_base"])
 
 def check_if_recording_exists(subdirs, filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
