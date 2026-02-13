@@ -34,7 +34,7 @@ if __name__ == "__main__":
             on_cwl_page = True
 
             if start_recording:
-                record_replay(file_path, file_name, speed_factor=4)
+                record_replay(file_path, file_name, speed_factor=1)
                 reset()
         
         # bring us home
