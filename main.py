@@ -1,113 +1,18 @@
-import pyautogui
 from utils import *
 from time import sleep
 from recording import record_replay
-import os
-
-locations = {
-    "cwl_menu": (105, 877),
-    "close_popup": (2270, 82),
-    "center_of_screen": (1282, 651),
-    "return_home": (155, 1282),
-    "first_enemy_base": (1486, 899),
-    "replay_button": (931, 1265),
-    "next_base": (1896, 1142),
-    "3rd_star": (1018, 1182, 255, 221, 77)
-}
-
-days = {
-    1: (670,1301),
-    2: (877,1294),
-    3: (1083,1296),
-    4: (1293,1296),
-    5: (1495,1292),
-    6: (1694,1294),
-    7: (1908,1293),
-}
-
-def start_replay(day: int, replay: int) -> bool:
-    '''
-    click on cwl menu
-    scroll up
-    close popup
-    select right day
-    click top replay
-    click right arrow till we get to the replay
-    check if its 3 stars, exit if its not
-    press replay
-    '''
-    if day > 7 or day < 1:
-        raise ValueError("day is out of range")
-    
-    if replay < 1:
-        raise ValueError("replay is one indexed, and the value given is less than 1")
-    
-    # open cwl page
-    click_on_screen(*locations["cwl_menu"])
-    sleep(5) # sleep extra long in case it needs to load
-    
-    # try to close the popup
-    click_on_screen(*locations["close_popup"])
-
-    # scroll to the top of the page
-    move_mouse_to(*locations["center_of_screen"])
-    scroll(15)
-
-    # go the the right day
-    click_on_screen(*days[day])
-    sleep(5)
-
-    # click on the first enemy base
-    click_on_screen(*locations["first_enemy_base"])
-
-    # go to the correct replay
-    for i in range(replay - 1):
-        click_on_screen(*locations["next_base"], min_delay=0.1, max_delay=0.3, max_press_time=.15)
-
-    # check if its a 3 star
-    if not check_color_of_pixel(*locations["3rd_star"], threshold=40):
-        print("exiting because star col is wrong")
-        return False
-
-    # start the replay
-    click_on_screen(*locations["replay_button"])
-
-    return True
-
-def reset_after_rec():
-    # exit out of the replay
-    click_on_screen(*locations["return_home"])
-    sleep(2)
-
-    # close the popup
-    click_on_screen(*locations["close_popup"])
-
-    # return home
-    click_on_screen(*locations["return_home"])
-
-def reset_no_rec():
-    click_on_screen(*locations["return_home"])
-
-def check_if_recording_exists(subdirs, filename):
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-
-    videos_dir = os.path.join(base_dir, "videos")
-    for subdir in subdirs:
-        videos_dir = os.path.join(videos_dir, subdir)
-    
-    video_file = os.path.join(videos_dir, f"{filename}.mp4")
-
-    if os.path.exists(video_file):
-        return True
-    
-    print(f"file `{video_file}` does not exist")
-    return False
+from navagate_menu import check_if_recording_exists, start_replay, reset
+from locations import locations
 
 if __name__ == "__main__":
     init_clash_window()
 
+    pyautogui.PAUSE = 0.0
+
     CLAN_NAME = "Lethal_Turtles"
     DATE = "26_FEB"
+
+    on_cwl_page = False
 
     for day in range(1, 8):
         for attack in range (1, 16):
@@ -117,12 +22,22 @@ if __name__ == "__main__":
             print(f"recording {"".join([f"{x}/" for x in file_path])}{file_name}")
 
             if check_if_recording_exists(file_path, file_name):
-                continue
+                if on_cwl_page:
+                    # if we are navigating the cwl menu already then we must go to the next base in the gui
+                    click_on_screen(*locations["next_base"])
+                    continue
+                else:
+                    # otherwise we can just do noting (since we will click on the next button x times anyway in record_replay)
+                    continue
 
-            start_recording = start_replay(day, attack)
+            start_recording = start_replay(day, attack, on_cwl_page)
+            on_cwl_page = True
 
             if start_recording:
                 record_replay(file_path, file_name, speed_factor=4)
-                reset_after_rec()
-            else:
-                reset_no_rec()
+                reset()
+        
+        # bring us home
+        reset()
+        on_cwl_page = False
+        

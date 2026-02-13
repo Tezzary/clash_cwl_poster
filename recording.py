@@ -46,10 +46,10 @@ locations = {
 }
 
 def toggle_pause():
-    click_on_screen(*locations["pause_button"], max_delay=.3)
+    click_on_screen(*locations["pause_button"], max_offset=20, min_delay=0.0, max_delay=.05, min_press_time=0.05, max_press_time=0.1)
 
 def speed_up_game():
-    click_on_screen(*locations["speed_button"], max_delay=.3)
+    click_on_screen(*locations["speed_button"], max_offset=20, min_delay=0.0, max_delay=.05, min_press_time=0.05, max_press_time=0.1)
 
 def zoom_out():
     move_mouse_to(1280, 720)
