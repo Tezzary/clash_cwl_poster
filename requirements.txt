@@ -5,3 +5,4 @@ pygetwindow
 obsws-python
 moviepy
 imageio-ffmpeg
+requests
