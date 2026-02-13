@@ -13,7 +13,7 @@ if __name__ == "__main__":
     settings = RecordSettings(
         clan_name="Lethal_Turtles",
         date="26_FEB",
-        speed_factor=4,
+        speed_factor=1,
         resolution="1080p"
     )
 
