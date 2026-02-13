@@ -3,6 +3,14 @@ from time import sleep
 from locations import locations
 from recording import record_replay
 import os
+from dataclasses import dataclass
+
+@dataclass
+class RecordSettings:
+    clan_name: str
+    date: str
+    speed_factor: int
+    resolution: str
 
 days = {
     1: (670,1301),
@@ -24,7 +32,7 @@ def scroll_to_top():
     while not check_color_of_pixel(0, 0, 0, 0, 0, 3):
         scroll(1)
 
-def record_all_replays(clan_name: str, date: str, speed_factor: int):
+def record_all_replays(settings: RecordSettings):
     '''
     open cwl menu
 
@@ -48,13 +56,13 @@ def record_all_replays(clan_name: str, date: str, speed_factor: int):
         click_on_screen(*locations["first_enemy_base"])
 
         for attack in range(1, 16):
-            filepath = [clan_name, date, f"day_{day}"]
+            filepath = [settings.clan_name, settings.date, f"day_{day}"]
             filename = f"attack_{attack}"
 
             if not check_if_recording_exists(filepath, filename):
                 click_on_screen(*locations["replay_button"], min_delay=0.05, max_delay=0.1, min_press_time=0.05, max_press_time=0.1)
                 
-                record_replay(filepath, filename, speed_factor)
+                record_replay(filepath, filename, settings.speed_factor)
 
                 click_on_screen(*locations["return_home"])
                 wait_for_cwl_menu_to_load()

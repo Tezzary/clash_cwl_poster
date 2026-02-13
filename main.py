@@ -1,5 +1,5 @@
 from utils import *
-from navagate_menu import record_all_replays
+from navagate_menu import record_all_replays, RecordSettings
 from locations import locations
 
 if __name__ == "__main__":
@@ -10,4 +10,11 @@ if __name__ == "__main__":
     CLAN_NAME = "Lethal_Turtles"
     DATE = "26_FEB"
 
-    record_all_replays(CLAN_NAME, DATE, 4)
+    settings = RecordSettings(
+        clan_name="Lethal_Turtles",
+        date="26_FEB",
+        speed_factor=4,
+        resolution="1080p"
+    )
+
+    record_all_replays(settings)
