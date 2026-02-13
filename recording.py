@@ -13,22 +13,21 @@ HOST = 'localhost'
 PORT = 4455
 PASSWORD = 'password' # Replace with your actual password
 
-recording_start = None
+recording_start = 0
 
-def start_recording(subdirs, filename):
+def start_recording(video_file):
     global recording_start
 
     cl = obs.ReqClient(host=HOST, port=PORT, password=PASSWORD, timeout=3)
+    
+    # os.path.pardir is basically just .. so im basically just adding .. to it and then taking the path
+    # stack overflow reckons that using os.path.dirname is unreliable lmao
+    parent_dir = os.path.abspath(os.path.join(video_file, os.path.pardir))
+    filename = os.path.basename(video_file)
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    os.makedirs(parent_dir, exist_ok=True)
 
-    videos_dir = os.path.join(base_dir, "videos")
-    for subdir in subdirs:
-        videos_dir = os.path.join(videos_dir, subdir)
-
-    os.makedirs(videos_dir, exist_ok=True)
-
-    cl.set_record_directory(videos_dir)
+    cl.set_record_directory(parent_dir)
     cl.set_profile_parameter("Output", "FilenameFormatting", filename)
 
     resp = cl.start_record()
@@ -49,7 +48,7 @@ def toggle_pause():
     click_on_screen(*locations["pause_button"], max_offset=20, min_delay=0.0, max_delay=0.0, min_press_time=0.0, max_press_time=0.0)
 
 def speed_up_game():
-    click_on_screen(*locations["speed_button"], max_offset=20, min_delay=0.0, max_delay=0.0, min_press_time=0.00, max_press_time=0.0)
+    click_on_screen(*locations["speed_button"], max_offset=20, min_delay=0.0, max_delay=0.0, min_press_time=0.0, max_press_time=0.0)
 
 def zoom_out():
     move_mouse_to(1280, 720)
@@ -61,7 +60,7 @@ def zoom_out():
     pyautogui.keyUp('ctrl')
 
 # returns replay length in seconds
-def record_replay(subdirs, filename, speed_factor=1):
+def record_replay(video_file, speed_factor=1):
     if not speed_factor in (1, 2, 4):
         raise ValueError("Speed factor must be 1 of: 1, 2, 4")
     
@@ -83,7 +82,7 @@ def record_replay(subdirs, filename, speed_factor=1):
     toggle_pause()
 
     #recording
-    start_recording(subdirs, filename)
+    start_recording(video_file)
     
     #check if play again button is on screen to end replay
     while not find_location_on_screen("resources/play_again.png", 0.99):

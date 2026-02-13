@@ -1,9 +1,26 @@
 from utils import *
 from time import sleep
-from locations import locations
 from recording import record_replay
 import os
-from RecordSettings import RecordSettings
+from dataclasses import dataclass
+
+@dataclass
+class RecordSettings:
+    speed_factor: int
+    resolution: str
+    path: str
+    day: int | None
+
+locations = {
+    "cwl_menu": (105, 877),
+    "close_popup": (2270, 82),
+    "center_of_screen": (1282, 651),
+    "return_home": (155, 1282),
+    "first_enemy_base": (1486, 899),
+    "replay_button": (931, 1265),
+    "next_base": (1896, 1142),
+    "3rd_star": (1018, 1182, 255, 221, 77)
+}
 
 days = {
     1: (670,1301),
@@ -24,6 +41,7 @@ def scroll_to_top():
     move_mouse_to(*locations["center_of_screen"])
     while not check_color_of_pixel(0, 0, 0, 0, 0, 3):
         scroll(1)
+    sleep(.5) # let the screen settle
 
 def record_all_replays(settings: RecordSettings) -> None:
     '''
@@ -50,15 +68,16 @@ def record_all_replays(settings: RecordSettings) -> None:
         wait_for_cwl_menu_to_load()
         scroll_to_top()
         click_on_screen(*locations["first_enemy_base"])
+        
+        day_path = os.path.join(settings.path, f"day_{day}")
 
         for attack in range(1, 16):
-            filepath = [settings.clan_name, settings.date, f"day_{day}"]
-            filename = f"attack_{attack}"
+            video_file = os.path.join(day_path, f"attack_{attack}")
 
-            if not check_if_recording_exists(filepath, filename):
-                click_on_screen(*locations["replay_button"], min_delay=0.05, max_delay=0.1, min_press_time=0.05, max_press_time=0.1)
+            if not check_if_recording_exists(video_file):
+                click_on_screen(*locations["replay_button"], min_delay=0.1, max_delay=0.2, min_press_time=0.05, max_press_time=0.1)
                 
-                record_replay(filepath, filename, settings.speed_factor)
+                record_replay(video_file, settings.speed_factor)
 
                 click_on_screen(*locations["return_home"])
                 wait_for_cwl_menu_to_load()
@@ -69,16 +88,8 @@ def record_all_replays(settings: RecordSettings) -> None:
         if settings.day is not None:
             break
 
-def check_if_recording_exists(subdirs, filename):
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-
-    videos_dir = os.path.join(base_dir, "videos")
-    for subdir in subdirs:
-        videos_dir = os.path.join(videos_dir, subdir)
-    
-    video_file = os.path.join(videos_dir, f"{filename}.mp4")
-
-    if os.path.exists(video_file):
+def check_if_recording_exists(video_file):
+    if os.path.exists(video_file + ".mp4"):
         return True
     
     print(f"file `{video_file}` does not exist")
