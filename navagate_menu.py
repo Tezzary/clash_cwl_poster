@@ -3,14 +3,7 @@ from time import sleep
 from locations import locations
 from recording import record_replay
 import os
-from dataclasses import dataclass
-
-@dataclass
-class RecordSettings:
-    clan_name: str
-    date: str
-    speed_factor: int
-    resolution: str
+from RecordSettings import RecordSettings
 
 days = {
     1: (670,1301),
@@ -32,7 +25,7 @@ def scroll_to_top():
     while not check_color_of_pixel(0, 0, 0, 0, 0, 3):
         scroll(1)
 
-def record_all_replays(settings: RecordSettings):
+def record_all_replays(settings: RecordSettings) -> None:
     '''
     open cwl menu
 
@@ -49,6 +42,9 @@ def record_all_replays(settings: RecordSettings):
     click_on_screen(*locations["close_popup"])
 
     for day in range(1, 8):
+        if settings.day is not None:
+            day = settings.day
+
         click_on_screen(*locations["center_of_screen"])
         click_on_screen(*days[day])
         wait_for_cwl_menu_to_load()
@@ -69,6 +65,9 @@ def record_all_replays(settings: RecordSettings):
                 click_on_screen(*locations["close_popup"])
             
             click_on_screen(*locations["next_base"])
+
+        if settings.day is not None:
+            break
 
 def check_if_recording_exists(subdirs, filename):
     base_dir = os.path.dirname(os.path.abspath(__file__))
