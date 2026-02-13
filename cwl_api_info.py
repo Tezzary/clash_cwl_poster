@@ -59,7 +59,10 @@ def populate_wars(clan_tag):
 
                 formatted_war_data[player["mapPosition"]] = {
                     "defender": player["name"],
-                    "attacker": all_players[player["bestOpponentAttack"]["attackerTag"]]
+                    "attacker": all_players[player["bestOpponentAttack"]["attackerTag"]],
+                    "stars": player["bestOpponentAttack"]["stars"],
+                    "percent": player["bestOpponentAttack"]["destructionPercentage"],
+                    "duration": player["bestOpponentAttack"]["duration"],
                 }
             formatted_wars[i + 1] = formatted_war_data
 
