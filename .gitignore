@@ -1,7 +1,7 @@
 venv/
 *.mp4
 *.png
-videos/
+videos*/
 
 __pycache__/
 *.pyc
