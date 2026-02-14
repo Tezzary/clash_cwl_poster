@@ -64,7 +64,7 @@ def record_replay(video_file, speed_factor=1):
     if not speed_factor in (1, 2, 4):
         raise ValueError("Speed factor must be 1 of: 1, 2, 4")
     
-    while not find_location_on_screen("resources/pause_button.png", 0.99):
+    while not find_location_on_screen("pause_button.png", 0.99):
         sleep(0.1)
     
     #handling game speed
@@ -85,7 +85,7 @@ def record_replay(video_file, speed_factor=1):
     start_recording(video_file)
     
     #check if play again button is on screen to end replay
-    while not find_location_on_screen("resources/play_again.png", 0.99):
+    while not find_location_on_screen("play_again.png", 0.99):
         sleep(1)
 
     recording_time = stop_recording()

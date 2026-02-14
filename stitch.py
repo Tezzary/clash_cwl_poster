@@ -2,7 +2,7 @@ import os
 import subprocess
 import imageio_ffmpeg
 import json
-import cwl_api_info
+import shared.cwl_api_info as cwl_api_info
 
 CLAN = "Lethal_Turtles"
 CWL_DATE = "26_FEB"

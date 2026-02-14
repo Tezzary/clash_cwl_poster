@@ -4,6 +4,7 @@ import random
 from time import sleep
 import cv2
 import numpy as np
+import os
 
 RES_X = 2560
 RES_Y = 1440
@@ -86,7 +87,10 @@ def normalize_camera():
 
     pyautogui.mouseUp()
 
-def find_location_on_screen(image_path, threshold=0.5):
+def find_location_on_screen(image_name, threshold=0.5):
+    image_path = os.path.abspath(os.path.join(__file__, os.path.pardir))
+    image_path = os.path.join(image_path, f"resources/{image_name}")
+
     screenshot = get_screenshot()
     cv_screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
     template = cv2.imread(image_path, cv2.IMREAD_COLOR)

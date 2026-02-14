@@ -35,7 +35,7 @@ days = {
 def wait_for_cwl_menu_to_load():
     sleep(0.5) # make sure the clouds have actually came
 
-    while not find_location_on_screen(r"resources\cwl_info.png"): pass
+    while not find_location_on_screen("cwl_info.png"): pass
 
 def scroll_to_top():
     move_mouse_to(*locations["center_of_screen"])
